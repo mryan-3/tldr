@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>tldr</h1>
+    </header>
+    <main>
+      <div id="idle-state">
+        <h2 class="title">Capture the core of this page.</h2>
+        <button id="summarize-btn">Summarize</button>
+      </div>
+      <div id="loading-state" class="hidden">
+        <div class="spinner"></div>
+        <p id="loading-text">Reading Content...</p>
+      </div>
+      <div id="error-state" class="hidden">
+        <p id="error-msg"></p>
+        <button id="retry-btn">Try again</button>
+      </div>
+      <div id="summary-state" class="hidden">
+        <div class="summary-meta">
+          <span id="reading-time"></span>
+          <button id="close-btn">Close</button>
+        </div>
+        <section>
+          <h2>Summary</h2>
+          <ul id="summary-list"></ul>
+        </section>
+        <section>
+          <h2>Insights</h2>
+          <ul id="insights-list"></ul>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="popup.js" type="module"></script>
+</body>
+</html>
