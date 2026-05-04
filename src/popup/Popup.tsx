@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Lightning, Clock, ListBullets, Lightbulb, ArrowsClockwise, Warning, Gear } from '@phosphor-icons/react';
-import { SummaryData, ExtractionResponse } from '../types';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import type { SummaryData, ExtractionResponse } from '../types';
 
 const Popup: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -15,12 +9,12 @@ const Popup: React.FC = () => {
   const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs: chrome.tabs.Tab[]) => {
       if (tabs[0]?.url) {
         setCurrentUrl(tabs[0].url);
         // Check cache
-        chrome.storage.local.get(tabs[0].url, (result) => {
-          if (result[tabs[0].url]) {
+        chrome.storage.local.get(tabs[0].url, (result: { [key: string]: SummaryData }) => {
+          if (tabs[0].url && result[tabs[0].url]) {
             setSummary(result[tabs[0].url]);
           }
         });
@@ -48,13 +42,13 @@ const Popup: React.FC = () => {
       // 2. Trigger summarization
       chrome.runtime.sendMessage(
         { action: 'SUMMARIZE_CONTENT', payload: extraction.data },
-        (response) => {
+        (response: { success: boolean; data: SummaryData; error?: string }) => {
           if (response.success) {
             setSummary(response.data);
             // Cache result
             chrome.storage.local.set({ [currentUrl]: response.data });
           } else {
-            setError(response.error);
+            setError(response.error || 'Failed to generate summary');
           }
           setLoading(false);
         }

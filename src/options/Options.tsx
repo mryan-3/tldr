@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Key, CheckCircle, Warning } from '@phosphor-icons/react';
+import { Key, CheckCircle } from '@phosphor-icons/react';
 
 const Options: React.FC = () => {
   const [apiKey, setApiKey] = useState('');
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   useEffect(() => {
-    chrome.storage.local.get('apiKey', (result) => {
+    chrome.storage.local.get('apiKey', (result: { apiKey?: string }) => {
       if (result.apiKey) setApiKey(result.apiKey);
     });
   }, []);

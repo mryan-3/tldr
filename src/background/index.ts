@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { PageContent, SummaryData } from '../types';
+import type { PageContent, SummaryData } from '../types';
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: { action: string; payload: PageContent }, _sender: chrome.runtime.MessageSender, sendResponse: (response: any) => void) => {
   if (message.action === 'SUMMARIZE_CONTENT') {
     handleSummarization(message.payload, sendResponse);
     return true; // Keep channel open
@@ -10,7 +10,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
 async function handleSummarization(payload: PageContent, sendResponse: (response: any) => void) {
   try {
-    const { apiKey } = await chrome.storage.local.get('apiKey');
+    const storage = await chrome.storage.local.get('apiKey');
+    const apiKey = storage.apiKey as string | undefined;
     
     if (!apiKey) {
       sendResponse({ success: false, error: 'API Key missing. Please set it in the extension options.' });
