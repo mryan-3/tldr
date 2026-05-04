@@ -1,6 +1,6 @@
 import { Readability } from '@mozilla/readability';
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: { action: string }, _sender: chrome.runtime.MessageSender, sendResponse: (response: any) => void) => {
   if (message.action === 'EXTRACT_CONTENT') {
     try {
       // Clone the document to avoid modifying the live page
