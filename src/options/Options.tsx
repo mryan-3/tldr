@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Key, CheckCircle } from '@phosphor-icons/react';
+import { Key, CheckCircle, Warning } from '@phosphor-icons/react';
 
 const Options: React.FC = () => {
   const [apiKey, setApiKey] = useState('');
@@ -20,51 +20,69 @@ const Options: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto bg-white rounded-xl shadow-sm border p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">tldr Settings</h1>
-          <p className="mt-2 text-sm text-gray-500">Configure your Gemini API key to start summarizing.</p>
-        </div>
+    <div className="min-h-screen bg-surface py-20 px-6 font-sans">
+      <div className="max-w-md mx-auto">
+        <header className="mb-10 animate-fade-up">
+          <h1 className="text-3xl font-bold tracking-tight text-primary mb-2">Settings</h1>
+          <p className="text-sm text-muted">Enter your API key to start using tldr.</p>
+        </header>
 
-        <div className="space-y-6">
-          <div>
-            <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700 mb-1">
-              Gemini API Key
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Key size={18} className="text-gray-400" />
+        <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 animate-fade-up" style={{ animationDelay: '100ms' }}>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <label htmlFor="apiKey" className="block text-xs font-bold uppercase tracking-wider text-muted">
+                Gemini API Key
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted">
+                  <Key size={18} weight="bold" />
+                </div>
+                <input
+                  type="password"
+                  id="apiKey"
+                  className="block w-full pl-11 pr-4 py-3 bg-surface border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-sm"
+                  placeholder="Paste your key here"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                />
               </div>
-              <input
-                type="password"
-                id="apiKey"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-black focus:border-black sm:text-sm"
-                placeholder="Enter your API key"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-              />
             </div>
-            <p className="mt-2 text-xs text-gray-500">
-              Your key is stored locally in your browser and is only used to make requests to Google's Gemini API.
-            </p>
+
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleSave}
+                disabled={status === 'saving'}
+                className="btn-primary flex-1 py-3"
+              >
+                {status === 'saving' ? 'Saving...' : 'Save'}
+              </button>
+              
+              {status === 'saved' && (
+                <div className="text-green-500 animate-fade-up">
+                  <CheckCircle size={24} weight="fill" />
+                </div>
+              )}
+            </div>
+
+            <div className="pt-4 flex items-start gap-3 p-4 bg-primary/5 rounded-2xl">
+              <Warning size={16} className="text-primary shrink-0 mt-0.5" />
+              <p className="text-xs text-primary/80 leading-relaxed">
+                Your key is stored locally on your device and is never shared.
+              </p>
+            </div>
           </div>
-
-          <button
-            onClick={handleSave}
-            disabled={status === 'saving'}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50 transition-colors"
-          >
-            {status === 'saving' ? 'Saving...' : 'Save Settings'}
-          </button>
-
-          {status === 'saved' && (
-            <div className="flex items-center justify-center gap-2 text-green-600 text-sm">
-              <CheckCircle size={18} weight="fill" />
-              <span>Settings saved successfully!</span>
-            </div>
-          )}
         </div>
+
+        <footer className="mt-10 text-center animate-fade-up" style={{ animationDelay: '200ms' }}>
+          <a 
+            href="https://aistudio.google.com/app/apikey" 
+            target="_blank" 
+            rel="noreferrer" 
+            className="text-xs font-bold text-muted hover:text-primary transition-colors underline underline-offset-4"
+          >
+            Get an API key
+          </a>
+        </footer>
       </div>
     </div>
   );
