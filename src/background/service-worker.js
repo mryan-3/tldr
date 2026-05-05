@@ -25,7 +25,14 @@ async function handleRequest(url, sendResponse) {
       if (!apiKey) throw new Error('API Key missing');
 
       const model = new GoogleGenerativeAI(apiKey).getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
-      const prompt = `Summarize in JSON: {"summary":[], "keyInsights":[], "readingTime":""}. Article: ${ext.data.content}`;
+      const prompt = `Summarize the following content in JSON format.
+      Schema: {
+        "summary": ["string"],
+        "keyInsights": ["string"],
+        "readingTime": "string"
+      }
+      Important: "summary" and "keyInsights" MUST be arrays of strings.
+      Article: ${ext.data.content}`;
       
       const result = await model.generateContent(prompt);
       const jsonMatch = result.response.text().match(/\{[\s\S]*\}/);
